@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os,psutil,signal,daemon,time
+import os,psutil,signal,daemon,time,sys
 from psutil import Process
 
 class WatchDog(daemon.Daemon):
@@ -30,9 +30,15 @@ class WatchDog(daemon.Daemon):
 
 
 if __name__=='__main__':
-	name='tumbler'
-	threshold=.0001
-	wait=10#seconds
+	try:
+		name=sys.argv[1]
+		threshold=float(sys.argv[2])
+		wait=int(sys.argv[3])#seconds
+	except:
+		print 'using defaults'
+		name='tumbler'
+		threshold=.0001
+		wait=10#seconds
 	dog=WatchDog(name,threshold,wait)
-	dog.run()#run fg
-	#dog.start()#run daemonized
+	#dog.run()#run fg
+	dog.start()#run daemonized
